@@ -18,12 +18,10 @@ private:
 	System();
 
 public:
-
 	enum OutputFunction {
 		PUSH_PULL,
 		OPEN_DRAIN
 	};
-
 	enum InputFunction {
 		ANALOG,
 		INPUT_FLOATING,
@@ -43,6 +41,8 @@ public:
 	void setPinFunctionAlternate(Pin& pin, OutputFunction outputFunction);
 	void setPinFunctionOutput(Pin& pin, OutputFunction outputFunction);
 	void setPinFunctionInput(Pin& pin, InputFunction inputFunction);
+
+	void setPinState(Pin& pin, bool state);
 };
 
 

@@ -31,6 +31,10 @@ void initPin(Pin &pin, GPIO_InitTypeDef &GPIO_InitStructure) {
 	HAL_GPIO_Init(pin.port, &GPIO_InitStructure);
 }
 
+void System::setPinState(Pin &pin, bool state) {
+	HAL_GPIO_WritePin(pin.port, 1 << pin.pinNumber, (GPIO_PinState) state);
+}
+
 void System::setPinFunctionAlternate(Pin &pin, OutputFunction outputFunction) {
 
 	GPIO_InitTypeDef GPIO_InitStructure;
@@ -74,11 +78,11 @@ void System::setPinFunctionInput(Pin &pin, InputFunction inputFunction) {
 			break;
 		case INPUT_PULL_DOWN:
 			GPIO_InitStructure.Mode = GPIO_MODE_INPUT;
-			  GPIO_InitStructure.Pull = GPIO_PULLDOWN;
+			GPIO_InitStructure.Pull = GPIO_PULLDOWN;
 			break;
 		case INPUT_PULL_UP:
 			GPIO_InitStructure.Mode = GPIO_MODE_INPUT;
-			  GPIO_InitStructure.Pull = GPIO_PULLUP;
+			GPIO_InitStructure.Pull = GPIO_PULLUP;
 			break;
 	}
 	initPin(pin, GPIO_InitStructure);

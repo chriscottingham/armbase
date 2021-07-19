@@ -13,15 +13,19 @@
 
 class Blinky {
 private:
-	Pin& pin;
+	Pin &pin;
 
 public:
-	Blinky(Pin& pin);
+	Blinky(Pin &pin);
 
 	virtual ~Blinky();
 
-	Pin& getPin(){
+	Pin& getPin() {
 		return pin;
+	}
+
+	void setState(bool state) {
+		System::getInstance().setPinState(pin, state);
 	}
 };
 
