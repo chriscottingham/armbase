@@ -9,7 +9,9 @@
 
 Blinky::Blinky(Pin& pin) : pin(pin) {
 
-	System::getInstance().enableClock(pin);
+	System& system = System::getInstance();
+	system.enableClock(pin);
+	system.setPinFunctionOutput(pin, System::OutputFunction::PUSH_PULL);
 }
 
 Blinky::~Blinky() {

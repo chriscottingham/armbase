@@ -35,14 +35,14 @@ led::power_up()
   // Enable GPIO Peripheral clock
 //  SET_BIT(RCC->APB2ENR, BLINK_RCC_MASKx(BLINK_PORT_NUMBER));
 
-  GPIO_InitTypeDef GPIO_InitStructure;
+	  GPIO_InitTypeDef GPIO_InitStructure;
 
   // Configure pin in output push/pull mode
-  GPIO_InitStructure.Pin = BLINK_PIN_MASK(BLINK_PIN_NUMBER);
-  GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
-  GPIO_InitStructure.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(BLINK_GPIOx(BLINK_PORT_NUMBER), &GPIO_InitStructure);
+//  GPIO_InitStructure.Pin = BLINK_PIN_MASK(BLINK_PIN_NUMBER);
+//  GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+//  GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+//  GPIO_InitStructure.Pull = GPIO_PULLUP;
+//  HAL_GPIO_Init(BLINK_GPIOx(BLINK_PORT_NUMBER), &GPIO_InitStructure);
 
   // Start with led turned off
   turn_off();
