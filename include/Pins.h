@@ -14,6 +14,7 @@
 class Pins {
 private:
 	Pin blinkyPin = {12, GPIOB};
+	Pin blinkyPin2 = {13, GPIOB};
 
 	Pins(){}
 //	Pins(Pins const&);
@@ -30,6 +31,10 @@ public:
 
 	Pin& getBlinkyPin() {
 		return blinkyPin;
+	}
+
+	Pin& getBlinkyPin2() {
+		return blinkyPin2;
 	}
 };
 

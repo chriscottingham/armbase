@@ -11,6 +11,9 @@
 #define GET_GPIO(_N)                 ((GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE-GPIOA_BASE)*(_N)))
 
 #include <list>
+#include <functional>
+#include <vector>
+#include <queue>
 
 #include "Pin.h"
 #include "Task.h"
@@ -24,9 +27,15 @@ private:
 		Task *task;
 	};
 
+	struct TaskEntryComparator {
+		bool operator()( TaskEntry*& lhs, TaskEntry*& rhs )  {
+			return lhs->maturationTime > rhs->maturationTime;
+		}
+	};
+
 	uint32_t clock = 0;
 
-	std::list<TaskEntry*> taskEntries;
+	std::priority_queue<TaskEntry*, std::vector<TaskEntry*>, TaskEntryComparator> taskEntries;
 
 	System() {
 		SysTick_Config(10000);
@@ -88,7 +97,7 @@ public:
 	}
 
 	void queueTask(Task *task, uint16_t delay) {
-		taskEntries.push_back(new TaskEntry { clock + delay, task });
+		taskEntries.push(new TaskEntry { clock + delay, task });
 	}
 
 	void setPinFunctionOutput(Pin &pin, OutputFunction outputFunction) {
@@ -132,11 +141,15 @@ public:
 	void tick() {
 		if (!taskEntries.empty()) {
 			++clock;
-			TaskEntry *taskEntry = taskEntries.front();
-			if (clock >= taskEntry->maturationTime) {
-				taskEntries.pop_front();
-				taskEntry->task->run();
-				delete taskEntry;
+			while (!taskEntries.empty()) {
+				TaskEntry *taskEntry = taskEntries.top();
+				if (clock >= taskEntry->maturationTime) {
+					taskEntries.pop();
+					taskEntry->task->run();
+					delete taskEntry;
+				} else {
+					break;
+				}
 			}
 		}
 	}

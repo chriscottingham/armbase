@@ -63,9 +63,12 @@ int main(int argc, char *argv[]) {
 	trace_puts("Hello Arm World!");
 	trace_printf("System clock: %u Hz\n", SystemCoreClock);
 
-	Blinky blinky(Pins::getInstance().getBlinkyPin());
+	Pins& pins = Pins::getInstance();
+	Blinky blinky(pins.getBlinkyPin(), 1000);
+	Blinky blinky2(pins.getBlinkyPin2(), 300);
 
-	System::getInstance().queueTask(blinky.getRunner(), 1000);
+	blinky.start();
+	blinky2.start();
 
 	// Infinite loop
 	while (1) {

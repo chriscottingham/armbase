@@ -11,27 +11,15 @@
 #include "System.h"
 #include "Pin.h"
 
-class Blinky {
+class Blinky : public Task {
 private:
 	Pin &pin;
 	bool state = false;
+	uint32_t runDelay = 1000;
 
 public:
 
-	class BlinkRunner : public Task {
-	private:
-		Blinky* blinky;
-
-	public:
-		BlinkRunner(Blinky* blinky) : blinky(blinky) {}
-		void run() {
-			blinky->invertState();
-			System::getInstance().queueTask(this, 1000);
-		}
-		~BlinkRunner() {}
-	};
-
-	Blinky(Pin& pin) : pin(pin) {
+	Blinky(Pin& pin, uint32_t runDelay) : pin(pin), runDelay(runDelay) {
 
 		System& system = System::getInstance();
 		system.enableClock(pin);
@@ -40,6 +28,15 @@ public:
 		setState(false);
 	}
 	virtual ~Blinky(){}
+
+	void start(){
+		System::getInstance().queueTask(this, runDelay);
+	}
+
+	void run() {
+		invertState();
+		start();
+	}
 
 	Pin& getPin() {
 		return pin;
@@ -52,11 +49,6 @@ public:
 
 	void invertState() {
 		setState(!state);
-	}
-
-	BlinkRunner* getRunner() {
-		static BlinkRunner runner(this);
-		return &runner;
 	}
 
 };
