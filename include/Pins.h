@@ -15,7 +15,7 @@ class Pins {
 private:
 	Pin blinkyPin = {12, GPIOB};
 
-	Pins();
+	Pins(){}
 //	Pins(Pins const&);
 //	void operator=(Pins const&);
 

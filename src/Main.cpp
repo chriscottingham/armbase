@@ -41,8 +41,8 @@ namespace {
 	// ----- Timing definitions -------------------------------------------------
 
 	// Keep the LED on for 2/3 of a second.
-	constexpr timer::ticks_t BLINK_ON_TICKS = timer::FREQUENCY_HZ * 3 / 4;
-	constexpr timer::ticks_t BLINK_OFF_TICKS = timer::FREQUENCY_HZ - BLINK_ON_TICKS;
+//	constexpr timer::ticks_t BLINK_ON_TICKS = timer::FREQUENCY_HZ * 3 / 4;
+//	constexpr timer::ticks_t BLINK_OFF_TICKS = timer::FREQUENCY_HZ - BLINK_ON_TICKS;
 }
 
 // ----- main() ---------------------------------------------------------------
@@ -54,36 +54,29 @@ namespace {
 #pragma GCC diagnostic ignored "-Wmissing-declarations"
 #pragma GCC diagnostic ignored "-Wreturn-type"
 
-int main(int argc, char *argv[]) {
-	// Send a greeting to the trace device (skipped on Release).
-	trace_puts("Hello Arm World!");
+//#include "cortexm/exception-handlers.h"
+#include "Pin.h"
+#include "cmsis_device.h"
 
-	// At this stage the system clock should have already been configured
-	// at high speed.
+int main(int argc, char *argv[]) {
+
+	trace_puts("Hello Arm World!");
 	trace_printf("System clock: %u Hz\n", SystemCoreClock);
 
 	Blinky blinky(Pins::getInstance().getBlinkyPin());
-	trace_printf("blinky pin number %u\n", blinky.getPin().pinNumber);
 
-	timer timer;
-	timer.start();
-
-	uint32_t seconds = 0;
+	System::getInstance().queueTask(blinky.getRunner(), 1000);
 
 	// Infinite loop
 	while (1) {
-		blinky.setState(true);
-		timer.sleep(seconds == 0 ? timer::FREQUENCY_HZ : BLINK_ON_TICKS);
-
-		blinky.setState(false);
-		timer.sleep(BLINK_OFF_TICKS);
-
-		++seconds;
-
 		// Count seconds on the trace device.
-		trace_printf("Second %u\n", seconds);
+//		trace_printf("Second %u\n", seconds);
 	}
 	// Infinite loop, never return.
+}
+
+extern "C" void SysTick_Handler(void) {
+	System::getInstance().tick();
 }
 
 #pragma GCC diagnostic pop

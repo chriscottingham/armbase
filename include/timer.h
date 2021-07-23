@@ -29,30 +29,27 @@
 #define TIMER_H_
 
 #include "cmsis_device.h"
+#include "cortexm/exception-handlers.h"
 
 // ----------------------------------------------------------------------------
 
-class timer
-{
+class Timer {
 public:
-  typedef uint32_t ticks_t;
-  static constexpr ticks_t FREQUENCY_HZ = 1000u;
+	typedef uint32_t ticks_t;
+	static constexpr ticks_t FREQUENCY_HZ = 1000u;
 
 private:
-  static volatile ticks_t ms_delayCount;
+	static volatile ticks_t ms_delayCount;
 
 public:
-  // Default constructor
-  timer() = default;
+	void start(void){
+		SysTick_Config(SystemCoreClock / FREQUENCY_HZ);
+	}
 
-  void
-  start(void);
+	static void tick(void){}
 
-  static void
-  sleep(ticks_t ticks);
-
-  static void
-  tick(void);
+	Timer(){}
+	virtual ~Timer();
 };
 
 // ----------------------------------------------------------------------------
