@@ -11,8 +11,21 @@
 #include "System.h"
 #include "Pin.h"
 
-class Blinky : public Task {
+class Blinky {
 private:
+
+	class TaskImpl : public Task {
+	private:
+		Blinky* blinky;
+	public:
+		TaskImpl(Blinky* blinky) : blinky(blinky) {}
+
+		void run() {
+			blinky->invertState();
+			blinky->start();
+		}
+	};
+
 	Pin &pin;
 	bool state = false;
 	uint32_t runDelay = 1000;
@@ -30,12 +43,7 @@ public:
 	virtual ~Blinky(){}
 
 	void start(){
-		System::getInstance().queueTask(this, runDelay);
-	}
-
-	void run() {
-		invertState();
-		start();
+		System::getInstance().queueTask(new TaskImpl(this), runDelay);
 	}
 
 	Pin& getPin() {

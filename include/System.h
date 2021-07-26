@@ -25,6 +25,10 @@ private:
 	struct TaskEntry {
 		uint32_t maturationTime;
 		Task *task;
+
+		~TaskEntry(){
+			delete task;
+		}
 	};
 
 	struct TaskEntryComparator {
